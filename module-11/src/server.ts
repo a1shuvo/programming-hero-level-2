@@ -1,5 +1,6 @@
 import http, { IncomingMessage, Server, ServerResponse } from "http";
 import config from "./config";
+import findDynamicRoute from "./helpers/dynamicRouteHandler";
 import { RouteHandler, routes } from "./helpers/RouteHandler";
 import "./routes";
 
@@ -13,6 +14,10 @@ const server: Server = http.createServer(
 
     if (handler) {
       handler(req, res);
+    } else if (findDynamicRoute(method, path)) {
+      const match = findDynamicRoute(method, path);
+      (req as any).params = match?.params;
+      match?.handler(req, res);
     } else {
       res.writeHead(404, { "content-type": "application/json" });
       res.end(
