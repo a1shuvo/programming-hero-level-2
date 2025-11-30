@@ -51,13 +51,34 @@ app.get("/", (req: Request, res: Response) => {
   res.send("Hello Next Level Developers!");
 });
 
-app.post("/", (req: Request, res: Response) => {
-  console.log(req.body);
-  res.status(201).json({
-    success: true,
-    message: "Our API working correctly!",
-  });
+// users CRUD
+app.post("/users", async (req: Request, res: Response) => {
+  const { name, email } = req.body;
+
+  try {
+    const result = await pool.query(
+      `INSERT INTO users(name, email) VALUES($1, $2) RETURNING *`,
+      [name, email]
+    );
+    // console.log(result.rows[0]);
+
+    res.status(201).json({
+      success: true,
+      message: "Data inserted successfully!",
+      data: result.rows[0],
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+
 });
+
+app.get("/users", (req: Request, res: Response)=>{
+    
+})
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
