@@ -1,9 +1,10 @@
 import express, { Request, Response } from "express";
 import config from "./config";
-import initDB, { pool } from "./config/DB";
+import initDB from "./config/DB";
 import logger from "./middleware/logger";
-import { userRoutes } from "./modules/user/user.routes";
+import { authRoutes } from "./modules/auth/auth.routes";
 import { todoRoutes } from "./modules/todo/todo.routes";
+import { userRoutes } from "./modules/user/user.routes";
 
 const app = express();
 const port = config.port;
@@ -23,47 +24,10 @@ app.get("/", logger, (req: Request, res: Response) => {
 app.use("/users", userRoutes);
 
 // todos CRUD
-app.use("/todos", todoRoutes)
-app.post("/todos", async (req: Request, res: Response) => {
-  const { user_id, title } = req.body;
+app.use("/todos", todoRoutes);
 
-  try {
-    const result = await pool.query(
-      `INSERT INTO todos(user_id, title) VALUES($1, $2) RETURNING *`,
-      [user_id, title]
-    );
-
-    res.status(201).json({
-      success: true,
-      message: "ToDo created successfully!",
-      data: result.rows[0],
-    });
-  } catch (error: any) {
-    res.status(500).json({
-      success: false,
-      message: error.message,
-      details: error,
-    });
-  }
-});
-
-app.get("/todos", async (req: Request, res: Response) => {
-  try {
-    const result = await pool.query(`SELECT * FROM todos`);
-
-    res.status(200).json({
-      success: true,
-      message: "Data fetched successfully!",
-      data: result.rows,
-    });
-  } catch (error: any) {
-    res.status(500).json({
-      success: false,
-      message: error.message,
-      details: error,
-    });
-  }
-});
+// auth Routes
+app.use("/auth", authRoutes);
 
 // Handle undefined routes
 app.use((req, res) => {
