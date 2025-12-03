@@ -3,6 +3,7 @@ import config from "./config";
 import initDB, { pool } from "./config/DB";
 import logger from "./middleware/logger";
 import { userRoutes } from "./modules/user/user.routes";
+import { todoRoutes } from "./modules/todo/todo.routes";
 
 const app = express();
 const port = config.port;
@@ -22,6 +23,7 @@ app.get("/", logger, (req: Request, res: Response) => {
 app.use("/users", userRoutes);
 
 // todos CRUD
+app.use("/todos", todoRoutes)
 app.post("/todos", async (req: Request, res: Response) => {
   const { user_id, title } = req.body;
 
