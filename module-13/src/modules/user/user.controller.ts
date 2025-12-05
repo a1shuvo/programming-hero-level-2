@@ -39,7 +39,7 @@ const getUser = async (req: Request, res: Response) => {
 
 const getSingleUser = async (req: Request, res: Response) => {
   try {
-    const result = await userServices.getSingleUser(req.params.id);
+    const result = await userServices.getSingleUser(req.params.id!);
 
     if (result.rows.length === 0) {
       res.status(404).json({
@@ -65,7 +65,7 @@ const getSingleUser = async (req: Request, res: Response) => {
 const updateUser = async (req: Request, res: Response) => {
   const { name, email } = req.body;
   try {
-    const result = await userServices.updateUser(name, email, req.params.id);
+    const result = await userServices.updateUser(name, email, req.params.id!);
 
     if (result.rows.length === 0) {
       res.status(404).json({
@@ -90,7 +90,7 @@ const updateUser = async (req: Request, res: Response) => {
 
 const deleteUser = async (req: Request, res: Response) => {
   try {
-    const result = await userServices.deleteUser(req.params.id);
+    const result = await userServices.deleteUser(req.params.id!); 
 
     if (result.rowCount === 0) {
       res.status(404).json({

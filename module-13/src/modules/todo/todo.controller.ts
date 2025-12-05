@@ -39,7 +39,7 @@ const getTodos = async (req: Request, res: Response) => {
 
 const getSingleTodo = async (req: Request, res: Response) => {
   try {
-    const result = await todoServices.getSingleTodo(req.params.id);
+    const result = await todoServices.getSingleTodo(req.params.id!);
 
     if (result.rows.length === 0) {
       res.status(404).json({

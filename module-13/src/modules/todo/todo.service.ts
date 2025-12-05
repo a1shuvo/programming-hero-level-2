@@ -1,4 +1,5 @@
-import { pool } from "../../config/DB";
+import { pool } from "../../config/db";
+
 
 const createTodo = async (payload: Record<string, unknown>) => {
   const { user_id, title } = payload;
