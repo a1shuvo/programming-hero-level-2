@@ -1,8 +1,9 @@
 import { Router } from "express";
+import auth, { UserRole } from "../../middlewares/auth";
 import { postController } from "./post.controller";
 
 const router = Router();
 
-router.post("/", postController.createPost);
+router.post("/", auth(UserRole.USER), postController.createPost);
 
 export const PostRouter: Router = router;
