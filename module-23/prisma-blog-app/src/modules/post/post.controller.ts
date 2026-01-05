@@ -15,7 +15,8 @@ const createPost = async (req: Request, res: Response) => {
 
 const getAllPosts = async (req: Request, res: Response) => {
   try {
-    const posts = await postService.getAllPosts();
+    const { search } = req.query;
+    const posts = await postService.getAllPosts(search ? { search: search as string } : {});
     res.status(200).json(posts);
   } catch (error) {
     res.status(500).json({ error: "Failed to retrieve posts", details: error });
