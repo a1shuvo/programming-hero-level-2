@@ -15,8 +15,20 @@ const createPost = async (req: Request, res: Response) => {
 
 const getAllPosts = async (req: Request, res: Response) => {
   try {
-    const { search } = req.query;
-    const posts = await postService.getAllPosts(search ? { search: search as string } : {});
+    const filters: {
+      search?: string;
+      tags?: string[];
+    } = {};
+
+    if (typeof req.query.search === "string") {
+      filters.search = req.query.search;
+    }
+
+    if (typeof req.query.tags === "string") {
+      filters.tags = req.query.tags.split(",").map((t) => t.trim());
+    }
+
+    const posts = await postService.getAllPosts(filters);
     res.status(200).json(posts);
   } catch (error) {
     res.status(500).json({ error: "Failed to retrieve posts", details: error });
