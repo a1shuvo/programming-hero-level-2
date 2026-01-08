@@ -20,10 +20,9 @@ const getAllPosts = async (req: Request, res: Response) => {
       search?: string;
       tags?: string[];
       isFeatured?: boolean | undefined;
-      status: PostStatus | undefined;
-    } = {
-      status: undefined,
-    };
+      status?: PostStatus;
+      authorId?: string;
+    } = {};
 
     if (typeof req.query.search === "string") {
       filters.search = req.query.search;
@@ -48,6 +47,14 @@ const getAllPosts = async (req: Request, res: Response) => {
     ) {
       filters.status = req.query.status as PostStatus;
     }
+
+    if (typeof req.query.authorId === "string") {
+      filters.authorId = req.query.authorId;
+    }
+
+    // if (req.user) {
+    //   filters.authorId = req.user.id;
+    // }
 
     const posts = await postService.getAllPosts(filters);
     res.status(200).json(posts);
