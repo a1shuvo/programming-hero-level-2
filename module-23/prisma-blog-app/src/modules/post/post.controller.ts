@@ -18,6 +18,7 @@ const getAllPosts = async (req: Request, res: Response) => {
     const filters: {
       search?: string;
       tags?: string[];
+      isFeatured?: boolean | undefined;
     } = {};
 
     if (typeof req.query.search === "string") {
@@ -26,6 +27,15 @@ const getAllPosts = async (req: Request, res: Response) => {
 
     if (typeof req.query.tags === "string") {
       filters.tags = req.query.tags.split(",").map((t) => t.trim());
+    }
+
+    if (typeof req.query.isFeatured === "string") {
+      filters.isFeatured =
+        req.query.isFeatured === "true"
+          ? true
+          : req.query.isFeatured === "false"
+          ? false
+          : undefined;
     }
 
     const posts = await postService.getAllPosts(filters);

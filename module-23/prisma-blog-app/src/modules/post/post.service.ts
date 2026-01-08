@@ -15,9 +15,11 @@ const createPost = async (
 const getAllPosts = async ({
   search,
   tags,
+  isFeatured
 }: {
   search?: string;
   tags?: string[];
+  isFeatured?: boolean | undefined;
 }) => {
   const andConditions: PostWhereInput[] = [];
   if (search) {
@@ -32,6 +34,11 @@ const getAllPosts = async ({
   if (tags && tags.length > 0) {
     andConditions.push({ tags: { hasEvery: tags } });
   }
+
+  if (typeof isFeatured === "boolean") {
+    andConditions.push({ isFeatured });
+  }
+
   const posts = await prisma.post.findMany({
     ...(andConditions.length > 0 && { where: { AND: andConditions } }),
   });
