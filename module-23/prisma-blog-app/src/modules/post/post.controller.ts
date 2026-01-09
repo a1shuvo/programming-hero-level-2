@@ -22,6 +22,8 @@ const getAllPosts = async (req: Request, res: Response) => {
       isFeatured?: boolean | undefined;
       status?: PostStatus;
       authorId?: string;
+      page?: number;
+      limit?: number;
     } = {};
 
     if (typeof req.query.search === "string") {
@@ -55,6 +57,13 @@ const getAllPosts = async (req: Request, res: Response) => {
     // if (req.user) {
     //   filters.authorId = req.user.id;
     // }
+
+    if (typeof req.query.page === "string") {
+      filters.page = parseInt(req.query.page ?? "1", 10);
+    }
+    if (typeof req.query.limit === "string") {
+      filters.limit = parseInt(req.query.limit ?? "10", 10);
+    }
 
     const posts = await postService.getAllPosts(filters);
     res.status(200).json(posts);
