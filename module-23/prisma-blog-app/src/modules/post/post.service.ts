@@ -2,7 +2,6 @@ import { Post } from "../../../generated/prisma/client";
 import { PostWhereInput } from "../../../generated/prisma/models";
 import { prisma } from "../../lib/prisma";
 import { PostStatus } from "./../../../generated/prisma/enums";
-import { auth } from './../../lib/auth';
 
 const createPost = async (
   data: Omit<Post, "id" | "createdAt" | "updatedAt" | "authorId">,
@@ -21,7 +20,9 @@ const getAllPosts = async ({
   status,
   authorId,
   page,
-  limit
+  limit,
+  sortBy,
+  sortOrder,
 }: {
   search?: string;
   tags?: string[];
@@ -30,6 +31,8 @@ const getAllPosts = async ({
   authorId?: string;
   page?: number;
   limit?: number;
+  sortBy?: string;
+  sortOrder?: 'asc' | 'desc';
 }) => {
   const andConditions: PostWhereInput[] = [];
   if (search) {
@@ -61,6 +64,9 @@ const getAllPosts = async ({
     take: limit ?? 10,
     skip: page && limit ? (page - 1) * limit : 0,
     ...(andConditions.length > 0 && { where: { AND: andConditions } }),
+    orderBy: {
+      [sortBy || "createdAt"]: sortOrder || "desc",
+    },
   });
 
   return posts;
