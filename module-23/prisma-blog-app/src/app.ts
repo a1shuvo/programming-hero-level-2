@@ -3,6 +3,7 @@ import cors from "cors";
 import express, { Application } from "express";
 import { auth } from "./lib/auth";
 import { PostRouter } from "./modules/post/post.router";
+import { CommentRouter } from "./modules/comment/comment.router";
 
 const app: Application = express();
 
@@ -17,6 +18,7 @@ app.all("/api/auth/*splat", toNodeHandler(auth));
 app.use(express.json());
 
 app.use("/posts", PostRouter);
+app.use('/comments', CommentRouter);
 
 app.get("/", (req, res) => {
   res.send("Welcome to the Prisma Blog App!");
