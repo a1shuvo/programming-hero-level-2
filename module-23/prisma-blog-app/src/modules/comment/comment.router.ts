@@ -9,6 +9,13 @@ router.get(
   auth(UserRole.USER, UserRole.ADMIN),
   commentController.getCommentById
 );
+
+router.get(
+  "/author/:authorId",
+  auth(UserRole.USER, UserRole.ADMIN),
+  commentController.getCommentsByAuthor
+);
+
 router.post(
   "/",
   auth(UserRole.USER, UserRole.ADMIN),

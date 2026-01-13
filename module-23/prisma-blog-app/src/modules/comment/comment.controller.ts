@@ -27,7 +27,18 @@ const getCommentById = async (req: Request, res: Response) => {
   }
 };
 
+const getCommentsByAuthor = async (req: Request, res: Response) => {
+  try {
+    const { authorId } = req.params;
+    const result = await commentService.getCommentsByAuthor(authorId as string);
+    res.status(200).json(result);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch comments", details: error });
+  }
+};
+
 export const commentController = {
   createComment,
   getCommentById,
+  getCommentsByAuthor,
 };
