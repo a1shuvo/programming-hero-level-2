@@ -4,6 +4,11 @@ import { commentController } from "./comment.controller";
 
 const router = Router();
 
+router.get(
+  "/:id",
+  auth(UserRole.USER, UserRole.ADMIN),
+  commentController.getCommentById
+);
 router.post(
   "/",
   auth(UserRole.USER, UserRole.ADMIN),
