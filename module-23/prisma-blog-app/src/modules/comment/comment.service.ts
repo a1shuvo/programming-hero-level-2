@@ -40,8 +40,24 @@ const getCommentsByAuthor = async (authorId: string) => {
   });
 };
 
+const deleteComment = async (id: string, authorId: string) => {
+  const commentData = await prisma.comment.findFirst({
+    where: { id, authorId },
+    select: { id: true },
+  });
+
+  if (!commentData) {
+    throw new Error("Comment not found or unauthorized");
+  }
+
+  return await prisma.comment.delete({
+    where: { id: commentData.id },
+  });
+};
+
 export const commentService = {
   createComment,
   getCommentById,
   getCommentsByAuthor,
+  deleteComment,
 };
