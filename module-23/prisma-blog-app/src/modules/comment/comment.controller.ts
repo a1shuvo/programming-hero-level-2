@@ -56,9 +56,29 @@ const deleteComment = async (req: Request, res: Response) => {
   }
 };
 
+const updateComment = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const user = req.user;
+    if (!user) {
+      res.status(401).json({ error: "Unauthorized" });
+      return;
+    }
+    if (id) {
+      const result = await commentService.updateComment(id, user.id, req.body);
+      res.status(200).json(result);
+    } else {
+      res.status(400).json({ error: "Comment ID is required" });
+    }
+  } catch (error) {
+    res.status(500).json({ error: "Failed to update comment", details: error });
+  }
+};
+
 export const commentController = {
   createComment,
   getCommentById,
   getCommentsByAuthor,
   deleteComment,
+  updateComment,
 };
