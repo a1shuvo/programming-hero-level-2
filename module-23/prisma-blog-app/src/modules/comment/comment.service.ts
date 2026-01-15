@@ -72,7 +72,23 @@ const updateComment = async (
 
   return await prisma.comment.update({
     where: { id: commentData.id },
-    data: data,
+    data,
+  });
+};
+
+const moderateComment = async (id: string, data: { status: CommentStatus }) => {
+  const comment = await prisma.comment.findUniqueOrThrow({
+    where: { id },
+    select: { id: true, status: true },
+  });
+
+  if (comment.status === data.status) {
+    throw new Error(`Comment is already ${data.status}`);
+  }
+
+  return prisma.comment.update({
+    where: { id },
+    data,
   });
 };
 
@@ -82,4 +98,5 @@ export const commentService = {
   getCommentsByAuthor,
   deleteComment,
   updateComment,
+  moderateComment,
 };
