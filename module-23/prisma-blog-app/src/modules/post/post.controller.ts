@@ -1,10 +1,10 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { PostStatus } from "../../../generated/prisma/enums";
 import paginationSortingHelper from "../../helpers/paginationSortingHelper";
 import { UserRole } from "../../middlewares/auth";
 import { postService } from "./post.service";
 
-const createPost = async (req: Request, res: Response) => {
+const createPost = async (req: Request, res: Response, next: NextFunction) => {
   try {
     if (!req.user) {
       return res.status(401).json({ error: "Unauthorized" });
@@ -12,11 +12,11 @@ const createPost = async (req: Request, res: Response) => {
     const result = await postService.createPost(req.body, req.user.id);
     res.status(201).json(result);
   } catch (error) {
-    res.status(500).json({ error: "Failed to create post", details: error });
+    next(error);
   }
 };
 
-const getAllPosts = async (req: Request, res: Response) => {
+const getAllPosts = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const filters: {
       search?: string;
@@ -73,11 +73,11 @@ const getAllPosts = async (req: Request, res: Response) => {
     const posts = await postService.getAllPosts(filters);
     res.status(200).json(posts);
   } catch (error) {
-    res.status(500).json({ error: "Failed to retrieve posts", details: error });
+    next(error);
   }
 };
 
-const getPostById = async (req: Request, res: Response) => {
+const getPostById = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const postId = req.params.id;
     if (!postId) {
@@ -86,11 +86,11 @@ const getPostById = async (req: Request, res: Response) => {
     const post = await postService.getPostById(postId);
     res.status(200).json(post);
   } catch (error) {
-    res.status(500).json({ error: "Failed to retrieve post", details: error });
+    next(error);
   }
 };
 
-const getMyPosts = async (req: Request, res: Response) => {
+const getMyPosts = async (req: Request, res: Response, next: NextFunction) => {
   try {
     if (!req.user) {
       return res.status(401).json({ error: "Unauthorized" });
@@ -98,11 +98,11 @@ const getMyPosts = async (req: Request, res: Response) => {
     const posts = await postService.getMyPosts(req.user.id);
     res.status(200).json(posts);
   } catch (error) {
-    res.status(500).json({ error: "Failed to retrieve posts", details: error });
+    next(error);
   }
 };
 
-const updatePost = async (req: Request, res: Response) => {
+const updatePost = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const postId = req.params.id;
     if (!postId) {
@@ -120,11 +120,11 @@ const updatePost = async (req: Request, res: Response) => {
     );
     res.status(200).json(result);
   } catch (error) {
-    res.status(500).json({ error: "Failed to update post", details: error });
+    next(error);
   }
 };
 
-const deletePost = async (req: Request, res: Response) => {
+const deletePost = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const postId = req.params.id;
     if (!postId) {
@@ -137,16 +137,16 @@ const deletePost = async (req: Request, res: Response) => {
     const result = await postService.deletePost(postId, req.user.id, isAdmin);
     res.status(200).json(result);
   } catch (error) {
-    res.status(500).json({ error: "Failed to delete post", details: error });
+    next(error);
   }
 };
 
-const getStats = async (req: Request, res: Response) => {
+const getStats = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const stats = await postService.getStats();
     res.status(200).json(stats);
   } catch (error) {
-    res.status(500).json({ error: "Failed to retrieve stats", details: error });
+    next(error);
   }
 };
 

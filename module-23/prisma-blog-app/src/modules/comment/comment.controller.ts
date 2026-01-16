@@ -1,7 +1,11 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { commentService } from "./comment.service";
 
-const createComment = async (req: Request, res: Response) => {
+const createComment = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const user = req.user;
     req.body.authorId = user?.id;
@@ -9,11 +13,15 @@ const createComment = async (req: Request, res: Response) => {
     const result = await commentService.createComment(req.body);
     res.status(201).json(result);
   } catch (error) {
-    res.status(500).json({ error: "Failed to create comment", details: error });
+    next(error);
   }
 };
 
-const getCommentById = async (req: Request, res: Response) => {
+const getCommentById = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const { id } = req.params;
     if (!id) {
@@ -23,21 +31,29 @@ const getCommentById = async (req: Request, res: Response) => {
     const result = await commentService.getCommentById(id);
     res.status(200).json(result);
   } catch (error) {
-    res.status(500).json({ error: "Failed to fetch comment", details: error });
+    next(error);
   }
 };
 
-const getCommentsByAuthor = async (req: Request, res: Response) => {
+const getCommentsByAuthor = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const { authorId } = req.params;
     const result = await commentService.getCommentsByAuthor(authorId as string);
     res.status(200).json(result);
   } catch (error) {
-    res.status(500).json({ error: "Failed to fetch comments", details: error });
+    next(error);
   }
 };
 
-const deleteComment = async (req: Request, res: Response) => {
+const deleteComment = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const { id } = req.params;
     const user = req.user;
@@ -52,11 +68,15 @@ const deleteComment = async (req: Request, res: Response) => {
       res.status(400).json({ error: "Comment ID is required" });
     }
   } catch (error) {
-    res.status(500).json({ error: "Failed to delete comment", details: error });
+    next(error);
   }
 };
 
-const updateComment = async (req: Request, res: Response) => {
+const updateComment = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const { id } = req.params;
     const user = req.user;
@@ -71,11 +91,15 @@ const updateComment = async (req: Request, res: Response) => {
       res.status(400).json({ error: "Comment ID is required" });
     }
   } catch (error) {
-    res.status(500).json({ error: "Failed to update comment", details: error });
+    next(error);
   }
 };
 
-const moderateComment = async (req: Request, res: Response) => {
+const moderateComment = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const { id } = req.params;
     if (!id) {
@@ -84,9 +108,7 @@ const moderateComment = async (req: Request, res: Response) => {
     const result = await commentService.moderateComment(id, req.body);
     res.status(200).json(result);
   } catch (error) {
-    res
-      .status(500)
-      .json({ error: "Failed to moderate comment", details: error });
+    next(error);
   }
 };
 

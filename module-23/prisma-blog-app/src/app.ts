@@ -4,6 +4,7 @@ import express, { Application } from "express";
 import { auth } from "./lib/auth";
 import { PostRouter } from "./modules/post/post.router";
 import { CommentRouter } from "./modules/comment/comment.router";
+import globalErrorHandler from "./middlewares/globalErrorHandler";
 
 const app: Application = express();
 
@@ -23,5 +24,7 @@ app.use('/comments', CommentRouter);
 app.get("/", (req, res) => {
   res.send("Welcome to the Prisma Blog App!");
 });
+
+app.use(globalErrorHandler);
 
 export default app;
