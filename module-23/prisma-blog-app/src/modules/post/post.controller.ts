@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import { PostStatus } from "../../../generated/prisma/enums";
 import paginationSortingHelper from "../../helpers/paginationSortingHelper";
-import { postService } from "./post.service";
 import { UserRole } from "../../middlewares/auth";
+import { postService } from "./post.service";
 
 const createPost = async (req: Request, res: Response) => {
   try {
@@ -141,6 +141,15 @@ const deletePost = async (req: Request, res: Response) => {
   }
 };
 
+const getStats = async (req: Request, res: Response) => {
+  try {
+    const stats = await postService.getStats();
+    res.status(200).json(stats);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to retrieve stats", details: error });
+  }
+};
+
 export const postController = {
   createPost,
   getAllPosts,
@@ -148,4 +157,5 @@ export const postController = {
   getMyPosts,
   updatePost,
   deletePost,
+  getStats,
 };
