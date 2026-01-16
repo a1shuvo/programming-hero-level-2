@@ -101,9 +101,32 @@ const getMyPosts = async (req: Request, res: Response) => {
   }
 };
 
+const updatePost = async (req: Request, res: Response) => {
+  try {
+    const postId = req.params.id;
+    if (!postId) {
+      return res.status(400).json({ error: "Post ID is required" });
+    }
+    if (!req.user) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+    const isAdmin = req.user.role === "ADMIN";
+    const result = await postService.updatePost(
+      postId,
+      req.user.id,
+      req.body,
+      isAdmin
+    );
+    res.status(200).json(result);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to update post", details: error });
+  }
+};
+
 export const postController = {
   createPost,
   getAllPosts,
   getPostById,
   getMyPosts,
+  updatePost,
 };
