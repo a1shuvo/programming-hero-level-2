@@ -87,19 +87,18 @@ const Navbar = ({
         {/* Desktop Menu */}
         <nav className="hidden items-center justify-between lg:flex">
           <div className="flex items-center gap-6">
-            {/* Logo */}
-            <a href={logo.url} className="flex items-center gap-2">
+            <Link href={logo.url} className="flex items-center gap-2">
               <Image
                 src={logo.src}
-                className="max-h-8 dark:invert"
+                className="max-h-8 w-auto dark:invert" // Added w-auto
                 alt={logo.alt}
                 width={50}
                 height={10}
-              ></Image>
+              />
               <span className="text-lg font-semibold tracking-tighter">
                 {logo.title}
               </span>
-            </a>
+            </Link>
             <div className="flex items-center">
               <NavigationMenu>
                 <NavigationMenuList>
@@ -122,15 +121,14 @@ const Navbar = ({
         {/* Mobile Menu */}
         <div className="block lg:hidden">
           <div className="flex items-center justify-between">
-            {/* Logo */}
             <Link href={logo.url} className="flex items-center gap-2">
               <Image
                 src={logo.src}
-                className="max-h-8 dark:invert"
+                className="max-h-8 w-auto dark:invert" // Added w-auto
                 alt={logo.alt}
                 width={50}
                 height={10}
-              ></Image>
+              />
             </Link>
             <Sheet>
               <SheetTrigger asChild>
@@ -138,29 +136,28 @@ const Navbar = ({
                   <Menu className="size-4" />
                 </Button>
               </SheetTrigger>
-              <SheetContent className="overflow-y-auto">
+              <SheetContent side="left" className="overflow-y-auto">
                 <SheetHeader>
-                  <SheetTitle>
+                  {/* Changed SheetTitle to asChild to prevent h2 nesting issues */}
+                  <SheetTitle asChild>
                     <Link href={logo.url} className="flex items-center gap-2">
                       <Image
                         src={logo.src}
-                        className="max-h-8 dark:invert"
+                        className="max-h-8 w-auto dark:invert" // Added w-auto
                         alt={logo.alt}
                         width={50}
                         height={10}
                       />
+                      <span className="text-lg font-semibold">
+                        {logo.title}
+                      </span>
                     </Link>
                   </SheetTitle>
                 </SheetHeader>
                 <div className="flex flex-col gap-6 p-4">
-                  <Accordion
-                    type="single"
-                    collapsible
-                    className="flex w-full flex-col gap-4"
-                  >
+                  <Accordion type="single" collapsible className="w-full">
                     {menu.map((item) => renderMobileMenuItem(item))}
                   </Accordion>
-
                   <div className="flex flex-col gap-3">
                     <ModeToggle />
                     <Button asChild variant="outline">
