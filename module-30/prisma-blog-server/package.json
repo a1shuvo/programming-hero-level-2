@@ -1,5 +1,5 @@
 {
-  "name": "prisma-blog-app",
+  "name": "prisma-blog-server",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
