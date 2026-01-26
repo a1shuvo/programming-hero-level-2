@@ -1,4 +1,5 @@
 import { Navbar } from "@/components/layout/Navbar";
+import { Toaster } from "@/components/ui/sonner";
 import React from "react";
 
 export default function CommonLayout({
@@ -9,6 +10,7 @@ export default function CommonLayout({
   return (
     <div>
       <Navbar />
+      <Toaster richColors />
       {children}
     </div>
   );
