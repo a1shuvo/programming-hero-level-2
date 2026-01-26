@@ -6,7 +6,7 @@ export default async function Home() {
   const { data } = await blogService.getBlogPosts(
     {
       isFeatured: false,
-      search: "post 1",
+      // search: "post 1",
     },
     {
       revalidate: 10,
